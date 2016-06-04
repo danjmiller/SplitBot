@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SplitBot</string>
+    <string name="action_settings">Settings</string>
+    <string name="edit_total">Total Bill Amount</string>
+    <string name="button_split">Split</string>
+    <string name="edit_number_people">Number of People</string>
+</resources>
