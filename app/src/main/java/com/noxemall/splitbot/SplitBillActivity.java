@@ -10,7 +10,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.math.BigDecimal;
+import java.util.Currency;
+
 public class SplitBillActivity extends Activity {
+
+    private static int ROUNDING_MODE = BigDecimal.ROUND_HALF_EVEN;
+    // TODO: 6/4/16 Guess what the local currency is? 
+    private static int DECIMAL_PLACES = Currency.getInstance("USD").getDefaultFractionDigits();
 
     ListView listView;
 
@@ -74,13 +81,14 @@ public class SplitBillActivity extends Activity {
         });
     }
 
-    int getSplit(int total, int people)
+    BigDecimal getSplit(int total, int people)
     {
+        BigDecimal t = new BigDecimal(total);
+        BigDecimal p = new BigDecimal(people);
         if(total > 0 && people > 0) {
-            return total / people;
+            return t.divide(p,DECIMAL_PLACES,ROUNDING_MODE);
         }
-
-        else return total;
+        else return new BigDecimal(0);
     }
 
 
