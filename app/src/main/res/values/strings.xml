@@ -4,4 +4,7 @@
     <string name="edit_total">Total Bill Amount</string>
     <string name="button_split">Split</string>
     <string name="edit_number_people">Number of People</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

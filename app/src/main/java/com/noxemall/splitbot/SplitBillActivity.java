@@ -65,7 +65,9 @@ public class SplitBillActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
 
-                // ListView Clicked item index
+                Intent intent = new Intent(view.getContext(), ContactsListActivity.class);
+                startActivity(intent);
+               /* // ListView Clicked item index
                 int itemPosition     = position;
 
                 // ListView Clicked item value
@@ -75,6 +77,8 @@ public class SplitBillActivity extends Activity {
                 Toast.makeText(getApplicationContext(),
                         "Position :"+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG)
                         .show();
+                */
+
 
             }
 
