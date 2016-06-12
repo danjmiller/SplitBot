@@ -6,12 +6,15 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Currency;
 
 public class SplitBillActivity extends Activity {
@@ -94,17 +97,49 @@ public class SplitBillActivity extends Activity {
             Uri contactUri = data.getData();
             Cursor cursor = getContentResolver().query(contactUri, null, null, null, null);
             cursor.moveToFirst();
-            int email_column = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS);
+
+            int id_column = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.CONTACT_ID);
             int phone_column = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
             int name_column = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Identity.DISPLAY_NAME);
 
-            String email = cursor.getString(email_column);
+            String id = cursor.getString(id_column);
             String name = cursor.getString(name_column);
             String phone = cursor.getString(phone_column);
 
+            String email = getEmailAddress(id);
+
+
+
+            Log.d(TAG,"Name: " + name + " phone: " + phone + " email: " + email);
         }
     }
 
+    private String getEmailAddress(String id) {
 
+        ArrayList<String> emails = new ArrayList<String>();
+        Cursor emailCur = getContentResolver().query(
+                ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+                null,
+                ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?",
+                new String[]{id}, null);
+
+        while (emailCur.moveToNext()) {
+            // This would allow you get several email addresses
+            // if the email addresses were stored in an array
+            String email = emailCur.getString(
+                    emailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
+            String emailType = emailCur.getString(
+                    emailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.TYPE));
+
+            emails.add(email);
+        }
+        emailCur.close();
+
+        if( emails != null) {
+            return emails.get(0);
+        } else {
+            return "";
+        }
+    }
 
 }
