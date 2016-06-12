@@ -2,8 +2,12 @@ package com.noxemall.splitbot;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,9 +19,13 @@ import java.util.Currency;
 
 public class SplitBillActivity extends Activity {
 
+    private static final String TAG = SplitBillActivity.class.getName();
+
     private static int ROUNDING_MODE = BigDecimal.ROUND_HALF_EVEN;
     // TODO: 6/4/16 Guess what the local currency is? 
     private static int DECIMAL_PLACES = Currency.getInstance("USD").getDefaultFractionDigits();
+    public final int PICK_CONTACT = 2015;
+
 
     ListView listView;
 
@@ -65,8 +73,11 @@ public class SplitBillActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
 
-                Intent intent = new Intent(view.getContext(), ContactsListActivity.class);
-                startActivity(intent);
+                Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+                startActivityForResult(i, PICK_CONTACT);
+
+                //Intent intent = new Intent(view.getContext(), ContactsListActivity.class);
+                //startActivity(intent);
                /* // ListView Clicked item index
                 int itemPosition     = position;
 
@@ -95,7 +106,22 @@ public class SplitBillActivity extends Activity {
         else return new BigDecimal(0);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_CONTACT && resultCode == RESULT_OK) {
+            Uri contactUri = data.getData();
+            Cursor cursor = getContentResolver().query(contactUri, null, null, null, null);
+            cursor.moveToFirst();
+            int email_column = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS);
+            int phone_column = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+            int name_column = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Identity.DISPLAY_NAME);
 
+            String email = cursor.getString(email_column);
+            String name = cursor.getString(name_column);
+            String phone = cursor.getString(phone_column);
+
+        }
+    }
 
 
 
