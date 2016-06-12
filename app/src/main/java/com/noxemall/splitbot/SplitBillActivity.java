@@ -5,14 +5,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -35,8 +32,8 @@ public class SplitBillActivity extends Activity {
         setContentView(R.layout.activity_split_bill);
 
         Intent intent = getIntent();
-        String billTotal = intent.getStringExtra(MyActivity.EXTRA_TOTAL);
-        String numPeople = intent.getStringExtra(MyActivity.EXTRA_NUM_PEOPLE);
+        String billTotal = intent.getStringExtra(BillEntryActivity.EXTRA_TOTAL);
+        String numPeople = intent.getStringExtra(BillEntryActivity.EXTRA_NUM_PEOPLE);
 
 
         // Get ListView object from xml
@@ -75,21 +72,6 @@ public class SplitBillActivity extends Activity {
 
                 Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
                 startActivityForResult(i, PICK_CONTACT);
-
-                //Intent intent = new Intent(view.getContext(), ContactsListActivity.class);
-                //startActivity(intent);
-               /* // ListView Clicked item index
-                int itemPosition     = position;
-
-                // ListView Clicked item value
-                String  itemValue    = (String) listView.getItemAtPosition(position);
-
-                // Show Alert
-                Toast.makeText(getApplicationContext(),
-                        "Position :"+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG)
-                        .show();
-                */
-
 
             }
 

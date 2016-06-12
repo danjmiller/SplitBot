@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_my"
+    tools:showIn="@layout/bill_entry"
     android:orientation="vertical">
 
     <EditText android:id="@+id/edit_total"

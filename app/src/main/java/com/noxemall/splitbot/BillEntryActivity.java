@@ -12,16 +12,16 @@ import android.content.Intent;
 import android.widget.EditText;
 
 
-public class MyActivity extends AppCompatActivity {
+public class BillEntryActivity extends AppCompatActivity {
 
-    public final static String EXTRA_TOTAL = "com.mycompany.myfirstapp.TOTAL";
-    public final static String EXTRA_NUM_PEOPLE = "com.mycompany.myfirstapp.NUM_PEOPLE";
+    public final static String EXTRA_TOTAL = "com.noxemall.splitbot.TOTAL";
+    public final static String EXTRA_NUM_PEOPLE = "com.noxemall.splitbot.NUM_PEOPLE";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my);
+        setContentView(R.layout.bill_entry);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
