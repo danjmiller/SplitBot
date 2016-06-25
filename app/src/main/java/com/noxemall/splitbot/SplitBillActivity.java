@@ -8,26 +8,32 @@ import android.provider.ContactsContract;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Currency;
+import java.util.List;
 
 public class SplitBillActivity extends Activity {
 
     private static final String TAG = SplitBillActivity.class.getName();
+    public static final String ITEM_ID = "com.noxemall.splitbot.ITEM_ID";
 
     private static int ROUNDING_MODE = BigDecimal.ROUND_HALF_EVEN;
     // TODO: 6/4/16 Guess what the local currency is? 
     private static int DECIMAL_PLACES = Currency.getInstance("USD").getDefaultFractionDigits();
     public final int PICK_CONTACT = 2015;
 
-
+    private int currentPosition = -1;
     ListView listView;
+
+    private ArrayList<Person> splitList = null;
+    ArrayAdapter adapter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +53,13 @@ public class SplitBillActivity extends Activity {
         int people = Integer.parseInt(numPeople);
         String split = String.valueOf(getSplit(total,people));
 
-        String[] splitList = new String[people];
+        splitList = new ArrayList<Person>(people);
         for(int i = 0; i < people; i++)
         {
-            splitList[i] = split;
+            Person p = new Person();
+            p.billPortion = split;
+            p.displayName = "Unassigned";
+            splitList.add(p);
         }
 
         // Define a new Adapter
@@ -59,9 +68,22 @@ public class SplitBillActivity extends Activity {
         // Third parameter - ID of the TextView to which the data is written
         // Forth - the Array of data
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, splitList);
+     /*   ArrayAdapter<Person> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_2, android.R.id.text1, (List) splitList);
+*/
 
+        adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_2, android.R.id.text1, (List) splitList) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+                TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+
+                text1.setText(splitList.get(position).billPortion);
+                text2.setText(splitList.get(position).displayName);
+                return view;
+            }
+        };
 
         // Assign adapter to ListView
         listView.setAdapter(adapter);
@@ -75,6 +97,7 @@ public class SplitBillActivity extends Activity {
 
                 Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
                 startActivityForResult(i, PICK_CONTACT);
+                currentPosition = position;
 
             }
 
@@ -107,8 +130,11 @@ public class SplitBillActivity extends Activity {
             String phone = cursor.getString(phone_column);
 
             String email = getEmailAddress(id);
+            splitList.get(currentPosition).email = email;
+            splitList.get(currentPosition).displayName = name;
+            splitList.get(currentPosition).phone = phone;
 
-
+            adapter.notifyDataSetChanged();
 
             Log.d(TAG,"Name: " + name + " phone: " + phone + " email: " + email);
         }
